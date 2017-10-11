@@ -1,3 +1,4 @@
 app:
     resource: '@LudovicBundle/Controller/'
     type: annotation
+    prefix: /ludovic

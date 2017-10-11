@@ -12,6 +12,6 @@ class CountryController extends Controller
    */
   public function showAction()
   {
-    return $this->render('base.html.twig');
+    return $this->render('@Ludovic/base.html.twig');
   }
 }
