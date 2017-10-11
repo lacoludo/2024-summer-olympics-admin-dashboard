@@ -5,10 +5,10 @@ namespace LudovicBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class LudovicController extends Controller
+class AthleteController extends Controller
 {
   /**
-   * @Route("/ludovic", name="app_ludovic_show")
+   * @Route("/athletes", name="ludovic_athlete_all")
    */
   public function showAction()
   {
