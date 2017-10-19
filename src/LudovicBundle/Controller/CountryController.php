@@ -2,16 +2,157 @@
 
 namespace LudovicBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use LudovicBundle\Entity\Country;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Country controller.
+ *
+ * @Route("country")
+ */
 class CountryController extends Controller
 {
-  /**
-   * @Route("/countries", name="ludovic_country_all")
-   */
-  public function showAction()
-  {
-    return $this->render('@Ludovic/base.html.twig');
-  }
+    /**
+     * Lists all country entities.
+     *
+     * @Route("/", name="country_index")
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $countries = $em->getRepository('LudovicBundle:Country')->findAll();
+
+        return $this->render('LudovicBundle:country:index.html.twig', array(
+            'countries' => $countries,
+        ));
+    }
+
+    /**
+     * Creates a new country entity.
+     *
+     * @Route("/new", name="country_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
+        $country = new Country();
+        $form = $this->createForm('LudovicBundle\Form\CountryType', $country);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $flagPicture stores the uploaded image file
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $flagPicture */
+            $flagPicture = $country->getFlag();
+
+            // Generate a unique name for the file before saving it
+            $flagPictureName = md5(uniqid()).'.'.$flagPicture->guessExtension();
+
+            // Move the file to the directory where photos are stored
+            $flagPicture->move(
+                $this->getParameter('flags_directory'),
+                $flagPictureName
+            );
+
+            // Update the 'photo' property to store the image file name
+            // instead of its contents
+            $country->setFlag($flagPictureName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($country);
+            $em->flush();
+
+            $this->addFlash("success", "Country created");
+
+            return $this->redirectToRoute('country_show', array('id' => $country->getId()));
+        }
+
+        return $this->render('LudovicBundle:country:new.html.twig', array(
+            'country' => $country,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Finds and displays a country entity.
+     *
+     * @Route("/{id}", name="country_show")
+     * @Method("GET")
+     */
+    public function showAction(Country $country)
+    {
+        $deleteForm = $this->createDeleteForm($country);
+
+        return $this->render('LudovicBundle:country:show.html.twig', array(
+            'country' => $country,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing country entity.
+     *
+     * @Route("/{id}/edit", name="country_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, Country $country)
+    {
+        $deleteForm = $this->createDeleteForm($country);
+        $editForm = $this->createForm('LudovicBundle\Form\CountryType', $country);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('country_edit', array('id' => $country->getId()));
+        }
+
+        return $this->render('LudovicBundle:country:edit.html.twig', array(
+            'country' => $country,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a country entity.
+     *
+     * @Route("/{id}", name="country_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Country $country)
+    {
+        $form = $this->createDeleteForm($country);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($country);
+            $em->flush();
+        }
+
+        $this->addFlash("success", "Country deleted");
+
+        return $this->redirectToRoute('country_index');
+    }
+
+    /**
+     * Creates a form to delete a country entity.
+     *
+     * @param Country $country The country entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Country $country)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('country_delete', array('id' => $country->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
 }

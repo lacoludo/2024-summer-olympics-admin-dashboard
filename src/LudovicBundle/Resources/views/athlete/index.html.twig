@@ -1,0 +1,45 @@
+{% extends '@Ludovic/base.html.twig' %}
+
+{% block body %}
+    <h1>Athletes list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Lastname</th>
+                <th>Firstname</th>
+                <th>Birthdate</th>
+                <th>Photo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for athlete in athletes %}
+            <tr>
+                <td><a href="{{ path('athlete_show', { 'id': athlete.id }) }}">{{ athlete.id }}</a></td>
+                <td>{{ athlete.lastname }}</td>
+                <td>{{ athlete.firstname }}</td>
+                <td>{% if athlete.birthdate %}{{ athlete.birthdate|date('Y-m-d') }}{% endif %}</td>
+                <td><img src="{{ asset ("uploads/photos/" ~ athlete.photo) }}" alt="{{ athlete.photo }}"></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('athlete_show', { 'id': athlete.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('athlete_edit', { 'id': athlete.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('athlete_new') }}">Create a new athlete</a>
+        </li>
+    </ul>
+{% endblock %}

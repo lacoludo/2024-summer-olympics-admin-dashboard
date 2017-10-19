@@ -1,0 +1,137 @@
+{% extends 'LudovicBundle::base.html.twig' %}
+
+{% block body %}
+  <h1>Cities list</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for city in cities %}
+        <tr>
+          <td>
+            <a href="{{ path('city_show', { 'id': city.id }) }}">{{ city.id }}</a>
+          </td>
+          <td>{{ city.name }}</td>
+          <td>
+            <ul>
+              <li>
+                <a href="{{ path('city_show', { 'id': city.id }) }}">show</a>
+              </li>
+              <li>
+                <a href="{{ path('city_edit', { 'id': city.id }) }}">edit</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <ul>
+    <li>
+      <button class="call-form" data-toggle="modal" data-target="#myModal">Create a new city</button>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="error-message"></div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="save-new submit-form btn btn-primary">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <!-- <script>
+    let locale = "{{ app.request.locale }}";
+    let $currentCity;
+    let $currentLine;
+    function buildTr(ville) {
+      return "<tr><td>" + ville.name + "</td><td><button class='call-form' data-id=" + ville.id + " data-toggle='modal' data-target='#myModal'>Edit</button><button class='city-remove' data-id=" + ville.id + ">Delete</button></td></tr>";
+    }
+
+    $('body').on('click', '.save-new', function(e) {
+      $.ajax({
+        url: Routing.generate('city_new', {id: null}),
+        type: 'POST',
+        dataType: "JSON",
+        data: $('form').serialize(),
+        success: function(result) {
+          $(".tbody-ville").append(buildTr(result));
+          $('#myModal').modal('hide');
+          $(".success-message").html("{{ 'alert.city.add' }}");
+        },
+        error: function(result) {
+          $('.error-message').html(result.responseJSON);
+        }
+      });
+    });
+
+    $('body').on('click', '.call-form', function(event) {
+      $currentCity = $(event.target).data('id');
+      $currentLine = $(event.target).parent().parent();
+      if ($currentCity) {
+        $('.submit-form').addClass('save-update');
+        $('.submit-form').removeClass('save-new');
+      } else {
+        $('.submit-form').addClass('save-new');
+        $('.submit-form').removeClass('save-update');
+      }
+
+      $('.modal-title').html('Ajouter une ville');
+      $.ajax({
+        url: Routing.generate('city-show', {id: $currentCity}),
+        type: 'GET',
+        success: function(result) {
+          $(".modal-body").html(result);
+        }
+      });
+    });
+
+    $('body').on('click', '.save-update', function(e) {
+      $.ajax({
+        url: Routing.generate('city-edit', {id: $currentCity}),
+        type: 'POST',
+        dataType: "JSON",
+        data: $('form').serialize(),
+        success: function(result) {
+          $currentLine.replaceWith(buildTr(result));
+          $('#myModal').modal('hide');
+          $(".success-message").html("{{ 'alert.city.update' }}");
+        }
+      });
+    });
+
+    $('body').on('click', '.city-remove', function(event) {
+      let id = event.target.dataset.id;
+      $.ajax({
+        url: Routing.generate('city_delete'),
+        type: 'DELETE',
+        success: function(result) {
+          $(".modal-body").html(result);
+          let tr = $(event.target).parent().parent().remove();
+          $(".success-message").html("{{ 'alert.city.delete' }}");
+        }
+      });
+    });
+  </script> -->
+{% endblock %}

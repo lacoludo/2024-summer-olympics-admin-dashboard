@@ -7,10 +7,12 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    photos_directory: '%kernel.project_dir%/web/uploads/photos'
+    flags_directory: '%kernel.project_dir%/web/uploads/flags'
 
 framework:
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'

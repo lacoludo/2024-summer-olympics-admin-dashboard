@@ -2,14 +2,53 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}
-        <h1>JO</h1>
+
+        <nav class="black">
+            <div class="nav-wrapper">
+                {#<a class="brand-logo">Logo</a>#}
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="{{ path("country_index") }}">Country</a></li>
+                    <li><a href="{{ path("sport_index") }}">Sport</a></li>
+                    <li><a href="{{ path("athlete_index") }}">Athlete</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="{{ path("country_index") }}">Country</a></li>
+                    <li><a href="{{ path("sport_index") }}">Sport</a></li>
+                    <li><a href="{{ path("athlete_index") }}">Athlete</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="flash-notice">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </div>
+
+        {% block javascripts %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+            <script>
+                $(".button-collapse").sideNav();
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $('select').material_select();
+                });
+            </script>
         {% endblock %}
-        {% block javascripts %}{% endblock %}
     </body>
 </html>

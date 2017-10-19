@@ -1,0 +1,39 @@
+{% extends '@Ludovic/base.html.twig' %}
+
+{% block body %}
+    <h1>Sports list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sport in sports %}
+            <tr>
+                <td><a href="{{ path('sport_show', { 'id': sport.id }) }}">{{ sport.id }}</a></td>
+                <td>{{ sport.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('sport_show', { 'id': sport.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('sport_edit', { 'id': sport.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('sport_new') }}">Create a new sport</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'LudovicBundle::base.html.twig' %}
+
+{% block body %}
+    <h1>City creation</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {#{{ form_row(form.city) }}    #}{# <select id="name_city" ... #}
+        {#{{ form_row(form.position) }} #}{# <select id="name_position" ... #}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('city_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{#{% block javascripts %}
+    {{ parent() }}
+    <script>
+      var $city = $('#name_city');
+      // When city gets selected ...
+      $city.change(function() {
+        // ... retrieve the corresponding form.
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected city value.
+        var data = {};
+        data[$city.attr('name')] = $city.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+          url : $form.attr('action'),
+          type: $form.attr('method'),
+          data : data,
+          success: function(html) {
+            // Replace current position field ...
+            $('#name_position').replaceWith(
+                // ... with the returned one from the AJAX response.
+                $(html).find('#name_position')
+            );
+            // Position field now displays the appropriate positions.
+          }
+        });
+      });
+    </script>
+{% endblock %}#}
